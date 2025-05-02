@@ -17,3 +17,7 @@
 #include <iostream>
 
 #include "PAL_internal.h"
+
+#ifdef PAL_PLATFORM_WINDOWS
+#include "win32/win32.h"
+#endif // PAL_PLATFORM_WINDOWS
