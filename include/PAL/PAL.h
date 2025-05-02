@@ -4,6 +4,7 @@
 #include "PAL_memory.h"
 #include "PAL_log.h"
 #include "PAL_window.h"
+#include "PAL_input.h"
 
 struct PAL_InitData
 {

@@ -15,7 +15,8 @@ i32 PAL_Init(PAL_InitData init_data)
     PAL_Win32Init();
 #endif // PAL_PLATFORM_WINDOWS
 
-    std::cout << "PAL Initialized" << std::endl;
+    PAL_InitInput();
+    PAL_INFO("PAL Initialized");
     return 0;
 }
 
@@ -24,7 +25,7 @@ void PAL_Terminate()
 #ifdef PAL_PLATFORM_WINDOWS
     PAL_Win32Terminate();
 #endif // PAL_PLATFORM_WINDOWS
-    std::cout << "PAL Terminated" << std::endl;
+    PAL_INFO("PAL Terminated");
 }
 
 char* PAL_ToString(const wchar_t* wstring)

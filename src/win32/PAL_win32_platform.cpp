@@ -1,7 +1,7 @@
 
 #include "PAL_pch.h"
 
-void* alloc(u64 size)
+void* PAL_Alloc(u64 size)
 {
     void* memory = malloc(size);
     memset(memory, 0, size);
@@ -38,7 +38,7 @@ void PAL_Win32Terminate()
 PAL_Allocator PAL_GetAllocator()
 {
     PAL_Allocator allocator;
-    allocator.alloc = alloc;
+    allocator.alloc = PAL_Alloc;
     allocator.free = free;
     allocator.copy = memcpy;
     allocator.set = memset;

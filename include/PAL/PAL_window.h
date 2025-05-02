@@ -2,12 +2,13 @@
 #pragma once
 
 #include "PAL_defines.h"
+#include "PAL_input.h"
 
 struct PAL_Window;
 
 typedef void (*PAL_WindowCloseFun)(PAL_Window* window);
 typedef void (*PAL_WindowPosFun)(PAL_Window* window, i32 x, i32 y);
-typedef void (*PAL_WindowSizeFun)(PAL_Window* window, i32 x, i32 y);
+typedef void (*PAL_WindowSizeFun)(PAL_Window* window, u32 width, u32 height);
 
 typedef void (*PAL_KeyFun)(PAL_Window* window, u32 key, i32 scancode, u32 action);
 
@@ -31,8 +32,10 @@ PAL_API void PAL_DestroyWindow(PAL_Window* window);
 PAL_API void PAL_PullEvents();
 PAL_API void PAL_HideWindow(PAL_Window* window);
 PAL_API void PAL_ShowWindow(PAL_Window* window);
+
 PAL_API void PAL_MaximizeWindow(PAL_Window* window);
 PAL_API void PAL_MinimizeWindow(PAL_Window* window);
+PAL_API void PAL_ResetWindowCallbacks(PAL_Window* window);
 
 PAL_API void PAL_SetWindowTitle(PAL_Window* window, const char* title);
 PAL_API void PAL_SetWindowPos(PAL_Window* window, i32 x, i32 y, b8 center);
@@ -52,6 +55,9 @@ PAL_API const char* PAL_GetWindowTitle(PAL_Window* window);
 PAL_API void PAL_GetWindowSize(PAL_Window* window, u32* width, u32* height);
 PAL_API void PAL_GetWindowPos(PAL_Window* window, i32* x, i32* y);
 PAL_API void* PAL_GetWindowHandle(PAL_Window* window);
+
+PAL_API b8 PAL_GetKeyState(PAL_Window* window, u32 key);
+PAL_API b8 PAL_GetMouseButtonState(PAL_Window* window, u32 button);
 
 PAL_API b8 PAL_WindowShouldClose(PAL_Window* window);
 PAL_API b8 PAL_WindowIsHidden(PAL_Window* window);
