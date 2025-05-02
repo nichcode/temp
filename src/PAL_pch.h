@@ -19,6 +19,7 @@
 #include "PAL_internal.h"
 #include "PAL/PAL_log.h"
 #include "PAL/PAL_error.h"
+#include "PAL/PAL_assert.h"
 
 #ifdef PAL_PLATFORM_WINDOWS
 #include "win32/win32.h"

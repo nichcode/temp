@@ -16,6 +16,10 @@ void PAL_SetError(const char* msg, ...)
 
     s_Data.allocator.free(string);
     s_Data.allocator.free(out_string);
+
+#if defined(PAL_CONFIG_DEBUG) || defined(PAL_ENABLE_ASSERT)
+    PAL_WriteConsole(PAL_LOG_LEVEL_ERROR, s_Error.c_str());
+#endif // PAL_CONFIG_DEBUG || PAL_ENABLE_ASSERT
 }
 
 const char* PAL_GetError()

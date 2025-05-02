@@ -22,7 +22,7 @@ void PAL_Terminate()
 
 char* PAL_ToString(const wchar_t* wstring)
 {
-    // TODO: assert
+    PAL_ASSERT(wstring, "wstring is null");
     int len = PAL_WcharToMultibyte(wstring, 0, nullptr);
     if (len == 0) { return nullptr; }
 
@@ -35,7 +35,7 @@ char* PAL_ToString(const wchar_t* wstring)
 
 wchar_t* PAL_ToWstring(const char* string)
 {
-    // TODO: assert
+    PAL_ASSERT(string, "string is null");
     int len = PAL_MultibyteToWchar(string, 0, nullptr);
     if (len == 0) { return nullptr; }
 
@@ -48,7 +48,9 @@ wchar_t* PAL_ToWstring(const char* string)
 
 char* PAL_FormatArgs(const char* fmt, va_list args_list)
 {
+    PAL_ASSERT(fmt, "fmt is null");
     if (!fmt) { return nullptr; }
+
     va_list list_copy;
     __builtin_va_copy(list_copy, args_list);
     
@@ -64,7 +66,9 @@ char* PAL_FormatArgs(const char* fmt, va_list args_list)
 
 char* PAL_Format(const char* fmt, ...)
 {
+    PAL_ASSERT(fmt, "fmt is null");
     if (!fmt) { return nullptr; }
+    
     va_list arg_ptr;
     va_start(arg_ptr, fmt);
     char* result = PAL_FormatArgs(fmt, arg_ptr);
