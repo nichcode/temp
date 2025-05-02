@@ -7,6 +7,8 @@ int main(int argc, char** argv)
     init_data.custom_allocator = false;
     PAL_Init(init_data);
 
+    PAL_LogInfo("hello from float %f", 10.0f);
+
     PAL_Terminate();
     return 0;
 }

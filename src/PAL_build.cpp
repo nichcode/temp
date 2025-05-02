@@ -1,6 +1,8 @@
 
 #include "PAL/PAL_defines.h"
 
+#include "PAL_log.cpp"
+#include "PAL_error.cpp"
 #include "PAL.cpp"
 
 #ifdef PAL_PLATFORM_WINDOWS
