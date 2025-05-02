@@ -62,6 +62,7 @@ using b8 = bool;
 #define PAL_EXT __declspec(dllexport)
 #define PAL_IMT __declspec(dllimport)
 #define PAL_BREAK __debugbreak();
+#define PAL_STD 1
 #else
 #define PAL_EXPORT __attribute__((visibility("default")))
 #define PAL_IMPORT

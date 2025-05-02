@@ -15,3 +15,5 @@
 #include <algorithm>
 #include <memory>
 #include <iostream>
+
+#include "PAL_internal.h"
