@@ -1,6 +1,13 @@
 
 #include "PAL_pch.h"
 
+void* alloc(u64 size)
+{
+    void* memory = malloc(size);
+    memset(memory, 0, size);
+    return memory;
+}
+
 void PAL_Win32Init()
 {
     s_Instance = GetModuleHandleW(nullptr);
@@ -31,7 +38,7 @@ void PAL_Win32Terminate()
 PAL_Allocator PAL_GetAllocator()
 {
     PAL_Allocator allocator;
-    allocator.alloc = malloc;
+    allocator.alloc = alloc;
     allocator.free = free;
     allocator.copy = memcpy;
     allocator.set = memset;

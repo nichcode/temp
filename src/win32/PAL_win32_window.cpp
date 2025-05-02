@@ -11,6 +11,21 @@ struct PAL_Window
     i32 x, y;
     b8 shouldClose, focused, hidden;
     b8 maximized, minimized;
+
+    struct Callbacks
+    {
+        PAL_WindowCloseFun close = nullptr;
+        PAL_WindowPosFun pos = nullptr;
+        PAL_WindowSizeFun size = nullptr;
+
+        PAL_KeyFun key = nullptr;
+
+        PAL_MouseButtonFun mouse = nullptr;
+        PAL_MousePosFun mousePos = nullptr;
+        PAL_ScrollFun scroll = nullptr;
+    };
+
+    Callbacks callbacks;
 };
 
 void PAL_CenterWindow(PAL_Window* window)
@@ -201,6 +216,48 @@ void PAL_SetWindowSize(PAL_Window* window, u32 width, u32 height)
     );
 }
 
+void PAL_SetWindowCloseCallback(PAL_Window* window, PAL_WindowCloseFun callback)
+{
+    CHECK_WINDOW(window, )
+    window->callbacks.close = callback;
+}
+
+void PAL_SetWindowPosCallback(PAL_Window* window, PAL_WindowPosFun callback)
+{
+    CHECK_WINDOW(window, )
+    window->callbacks.pos = callback;
+}
+
+void PAL_SetWindowSizeCallback(PAL_Window* window, PAL_WindowSizeFun callback)
+{
+    CHECK_WINDOW(window, )
+    window->callbacks.size = callback;
+}
+
+void PAL_SetKeyCallback(PAL_Window* window, PAL_KeyFun callback)
+{
+    CHECK_WINDOW(window, )
+    window->callbacks.key = callback;
+}
+
+void PAL_SetMouseButtonCallback(PAL_Window* window, PAL_MouseButtonFun callback)
+{
+    CHECK_WINDOW(window, )
+    window->callbacks.mouse = callback;
+}
+
+void PAL_SetMousePosCallback(PAL_Window* window, PAL_MousePosFun callback)
+{
+    CHECK_WINDOW(window, )
+    window->callbacks.mousePos = callback;
+}
+
+void PAL_SetScrollCallback(PAL_Window* window, PAL_ScrollFun callback)
+{
+    CHECK_WINDOW(window, )
+    window->callbacks.scroll = callback;
+}
+
 const char* PAL_GetWindowTitle(PAL_Window* window)
 {
     CHECK_WINDOW(window, nullptr)
@@ -261,6 +318,9 @@ LRESULT CALLBACK PAL_Win32Proc(HWND hwnd, u32 msg, WPARAM w_param, LPARAM l_para
     switch (msg) {
         case WM_CLOSE: {
             window->shouldClose = true;
+            if (window->callbacks.close) {
+                window->callbacks.close(window);
+            }
             return 0;
             break;
         } 
