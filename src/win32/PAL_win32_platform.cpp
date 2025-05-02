@@ -1,6 +1,33 @@
 
 #include "PAL_pch.h"
 
+void PAL_Win32Init()
+{
+    s_Instance = GetModuleHandleW(nullptr);
+
+    WNDCLASSEXW wc = {};
+    wc.cbClsExtra = 0;
+    wc.cbSize = sizeof(WNDCLASSEXW);
+    wc.cbWndExtra = 0;
+    wc.hbrBackground = NULL;
+    wc.hCursor = LoadCursorW(s_Instance, IDC_ARROW);
+    wc.hIcon = LoadIconW(s_Instance, IDI_APPLICATION);
+    wc.hIconSm = LoadIconW(s_Instance, IDI_APPLICATION);
+    wc.hInstance = s_Instance;
+    wc.lpfnWndProc = PAL_Win32Proc;
+    wc.lpszClassName = s_ClassName;
+    wc.lpszMenuName = NULL;
+    wc.style = CS_DBLCLKS | CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
+
+    ATOM success = RegisterClassExW(&wc);
+    PAL_CHECK(success, "Win32 window Registration failed", )
+}
+
+void PAL_Win32Terminate()
+{
+    UnregisterClassW(s_ClassName, s_Instance);
+}
+
 PAL_Allocator PAL_GetAllocator()
 {
     PAL_Allocator allocator;

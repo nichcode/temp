@@ -19,3 +19,5 @@ i32 PAL_WcharToMultibyte(const wchar_t* wstr, u32 wstr_len, char* str);
 
 char* PAL_FormatArgs(const char* fmt, va_list args_list);
 void PAL_WriteConsole(PAL_LogLevel level, const char* msg);
+
+#define PAL_CHECK(expr, msg, ret)  if (!expr) { PAL_SetError(msg); return ret; }
