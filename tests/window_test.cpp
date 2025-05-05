@@ -57,21 +57,23 @@ int main(int argc, char** argv)
     init_data.custom_allocator = false;
     PAL_Init(init_data);
 
-    u32 flags = PAL_APP_WINDOW | PAL_WINDOW_CENTER;
+    u32 flags = PAL_APP_WINDOW | PAL_WINDOW_CENTER | PAL_WINDOW_OPENGL;
     PAL_Window* window = PAL_CreateWindow("window", 640, 480, flags);
 
     PAL_SetWindowCloseCallback(window, onWindowClose);
     PAL_SetWindowPosCallback(window, onWindowPos);
     PAL_SetWindowSizeCallback(window, onWindowSize);
 
-    PAL_SetKeyCallback(window, onKey); /*/*/
+    PAL_SetKeyCallback(window, onKey);
 
-    PAL_SetMouseButtonCallback(window, onMouseButton); /*/*/
+    PAL_SetMouseButtonCallback(window, onMouseButton);
     PAL_SetMousePosCallback(window, onMousePos);
     PAL_SetScrollCallback(window, onScroll);
 
     while (!PAL_WindowShouldClose(window)) {
         PAL_PullEvents();
+
+        PAL_SwapBuffers(window);
     }
     
     PAL_DestroyWindow(window);

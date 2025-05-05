@@ -8,6 +8,8 @@
 struct PAL_Data
 {
     PAL_Allocator allocator;
+    i32 glversion_major = 0;
+    i32 glversion_minor = 0;
 };
 
 static PAL_Data s_Data;

@@ -1,5 +1,7 @@
 
 #include "PAL_pch.h"
+#include "PAL_wgl_context.h"
+#include "opengl/PAL_glfuncs.h"
 
 #define CHECK_WINDOW(window, ret) PAL_CHECK(window, "window is null", ret)
 #define CHECK_KEY(key, ret) PAL_CHECK(key, "invalid key", ret)
@@ -9,7 +11,9 @@
 struct PAL_Window
 {
     HWND handle;
+    HDC device_context;
     const char* title;
+    HGLRC wgl_context;
     u32 width, height, flags;
     i32 x, y;
     b8 shouldClose, focused, hidden;
@@ -292,6 +296,23 @@ PAL_Window* PAL_CreateWindow(const char* title, u32 width, u32 height, u32 flags
     s_Data.allocator.free(wstr);
 
     PAL_MapKeys(window);
+    if (flags & PAL_WINDOW_OPENGL) {
+        window->wgl_context = PAL_WGLCreateContext(
+            window->handle, 
+            s_Data.glversion_major, 
+            s_Data.glversion_minor
+        );
+        window->device_context = GetDC(window->handle);
+        s_wglMakeCurrent(window->device_context, window->wgl_context);
+        if (!window->wgl_context) {
+            PAL_SetError("failed to create wgl context");
+            ReleaseDC(window->handle, window->device_context);
+            DestroyWindow(window->handle);
+            s_Data.allocator.free(window);
+            return nullptr;
+        }
+    }
+ 
     window->focused = true;
     window->shouldClose = false;
     return window;
@@ -301,6 +322,10 @@ void PAL_DestroyWindow(PAL_Window* window)
 {
     CHECK_WINDOW(window, )
     PAL_ResetWindowCallbacks(window);
+    if (window->wgl_context) {
+        s_wglDeleteContext(window->wgl_context);
+    }
+    ReleaseDC(window->handle, window->device_context);
     DestroyWindow(window->handle);
     s_Data.allocator.free(window);
 }
@@ -329,6 +354,12 @@ void PAL_ShowWindow(PAL_Window* window)
         show_flag = SW_SHOWMAXIMIZED;
     }
     ShowWindow(window->handle, show_flag);
+}
+
+void PAL_SwapBuffers(PAL_Window* window)
+{
+    CHECK_WINDOW(window,)
+    s_SwapBuffers(window->device_context);
 }
 
 void PAL_MaximizeWindow(PAL_Window* window)

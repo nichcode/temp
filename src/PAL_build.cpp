@@ -9,4 +9,8 @@
 #ifdef PAL_PLATFORM_WINDOWS
 #include "win32/PAL_win32_platform.cpp"
 #include "win32/PAL_win32_window.cpp"
+#include "win32/PAL_wgl_context.cpp"
 #endif // PAL_PLATFORM_WINDOWS
+
+// opengl
+#include "opengl/PAL_glfuncs.cpp"

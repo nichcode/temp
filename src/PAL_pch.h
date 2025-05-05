@@ -21,5 +21,5 @@
 #include "PAL/PAL_error.h"
 
 #ifdef PAL_PLATFORM_WINDOWS
-#include "win32/win32.h"
+#include "win32/PAL_win32.h"
 #endif // PAL_PLATFORM_WINDOWS

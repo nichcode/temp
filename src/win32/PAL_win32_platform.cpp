@@ -1,5 +1,7 @@
 
 #include "PAL_pch.h"
+#include "PAL/PAL.h"
+#include "win32/PAL_wgl_context.h"
 
 void* PAL_Alloc(u64 size)
 {
@@ -28,6 +30,8 @@ void PAL_Win32Init()
 
     ATOM success = RegisterClassExW(&wc);
     PAL_CHECK(success, "Win32 window Registration failed", )
+
+    PAL_WGLCreateDummyContext();
 }
 
 void PAL_Win32Terminate()
@@ -77,4 +81,32 @@ void PAL_WriteConsole(PAL_LogLevel level, const char* msg)
     WriteConsoleW(console, wstring, (DWORD)len, &number_written, 0);
     SetConsoleTextAttribute(console, 15);
     s_Data.allocator.free(wstring);
+}
+
+void* PAL_LoadLibrary(const char* dll_name)
+{
+    HMODULE result = LoadLibraryA(dll_name);
+    if (!result) {
+        PAL_SetError( "failed to load dll %s", dll_name);
+        return nullptr;
+    }
+    return result;
+}
+
+void* PAL_GetProcAddress(void* dll_name, const char* proc_name)
+{
+    PAL_CHECK(dll_name, "dll is null", nullptr)
+    HMODULE dll_lib = (HMODULE)dll_name;
+    FARPROC proc = GetProcAddress((HMODULE)dll_lib, proc_name);
+    if (!proc) {
+        PAL_SetError("Failed to load function: %s from DLL", proc_name);
+        return nullptr;
+    }
+    return (void*)proc;
+}
+
+void PAL_FreeLibrary(void* dll_name)
+{
+    PAL_CHECK(dll_name, "dll is null",)
+    FreeLibrary((HMODULE)dll_name);
 }
