@@ -4,6 +4,7 @@
 #include "PAL_log.cpp"
 #include "PAL_error.cpp"
 #include "PAL_input.cpp"
+#include "PAL_device.cpp"
 #include "PAL.cpp"
 
 #ifdef PAL_PLATFORM_WINDOWS
@@ -14,3 +15,6 @@
 
 // opengl
 #include "opengl/PAL_glfuncs.cpp"
+
+// dx11
+#include "dx11/PAL_dx11device.cpp"

@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "PAL_device.h"
 #include "PAL_memory.h"
 #include "PAL_log.h"
 #include "PAL_window.h"

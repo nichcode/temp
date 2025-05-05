@@ -32,11 +32,19 @@ void PAL_Win32Init()
     PAL_CHECK(success, "Win32 window Registration failed", )
 
     PAL_WGLCreateDummyContext();
+    s_Data.directx_flags = PAL_CheckDirectX();
 }
 
 void PAL_Win32Terminate()
 {
     UnregisterClassW(s_ClassName, s_Instance);
+    if (s_Data.directx_flags & PAL_DIRECTX11) {
+        PAL_FreeLibrary(s_Data.dx11);
+    }
+
+    if (s_Data.directx_flags & PAL_DIRECTX10) {
+        PAL_FreeLibrary(s_Data.dx10);
+    }
 }
 
 PAL_Allocator PAL_GetAllocator()
@@ -109,4 +117,15 @@ void PAL_FreeLibrary(void* dll_name)
 {
     PAL_CHECK(dll_name, "dll is null",)
     FreeLibrary((HMODULE)dll_name);
+}
+
+u32 PAL_CheckDirectX()
+{
+    u32 directx_flags = 0;
+    s_Data.dx11 = PAL_LoadLibrary("d3d11.dll");
+    s_Data.dx10 = PAL_LoadLibrary("d3d10.dll");
+
+    if (s_Data.dx11) {directx_flags |= PAL_DIRECTX11; }
+    if (s_Data.dx10) {directx_flags |= PAL_DIRECTX10; }
+    return directx_flags;
 }
