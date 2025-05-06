@@ -3,12 +3,26 @@
 
 #include "PAL_defines.h"
 
+struct PAL_Window;
 struct PAL_Device;
 
 enum PAL_DeviceType
 {
-    PAL_DEVICE_DX11
+    PAL_DEVICE_DX11 = 1
 };
 
-PAL_API PAL_Device* PAL_CreateDevice(u32 device_type);
+struct PAL_DeviceDesc
+{
+    PAL_Window* window = nullptr;
+    u32 device_type = 0;
+    u32 swap_chain_width = 0;
+    u32 swap_chain_height = 0;
+    b8 use_window_size = true;
+};
+
+PAL_API PAL_Device* PAL_CreateDevice(PAL_DeviceDesc* desc);
 PAL_API void PAL_DestroyDevice(PAL_Device* device);
+
+PAL_API void PAL_SwapBuffers(PAL_Device* device, b8 vsync);
+
+PAL_API u32 PAL_GetDeviceType(PAL_Device* device);

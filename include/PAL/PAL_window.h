@@ -33,7 +33,7 @@ PAL_API void PAL_DestroyWindow(PAL_Window* window);
 PAL_API void PAL_PullEvents();
 PAL_API void PAL_HideWindow(PAL_Window* window);
 PAL_API void PAL_ShowWindow(PAL_Window* window);
-PAL_API void PAL_SwapBuffers(PAL_Window* window);
+//PAL_API void PAL_SwapBuffers(PAL_Window* window);
 
 PAL_API void PAL_MaximizeWindow(PAL_Window* window);
 PAL_API void PAL_MinimizeWindow(PAL_Window* window);

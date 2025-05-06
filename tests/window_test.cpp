@@ -73,7 +73,7 @@ int main(int argc, char** argv)
     while (!PAL_WindowShouldClose(window)) {
         PAL_PullEvents();
 
-        PAL_SwapBuffers(window);
+        //PAL_SwapBuffers(window);
     }
     
     PAL_DestroyWindow(window);

@@ -10,10 +10,16 @@ int main(int argc, char** argv)
     u32 flags = PAL_APP_WINDOW | PAL_WINDOW_CENTER;
     PAL_Window* window = PAL_CreateWindow("window", 640, 480, flags);
 
-    PAL_Device* device = PAL_CreateDevice(PAL_DEVICE_DX11);
+    PAL_DeviceDesc device_desc;
+    device_desc.window = window;
+    device_desc.device_type = PAL_DEVICE_DX11;
+    device_desc.use_window_size = true;
+    PAL_Device* device = PAL_CreateDevice(&device_desc);
 
     while (!PAL_WindowShouldClose(window)) {
         PAL_PullEvents();
+
+        PAL_SwapBuffers(device, true);
     }
 
     PAL_DestroyDevice(device);

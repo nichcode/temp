@@ -356,11 +356,11 @@ void PAL_ShowWindow(PAL_Window* window)
     ShowWindow(window->handle, show_flag);
 }
 
-void PAL_SwapBuffers(PAL_Window* window)
-{
-    CHECK_WINDOW(window,)
-    s_SwapBuffers(window->device_context);
-}
+// void PAL_SwapBuffers(PAL_Window* window)
+// {
+//     CHECK_WINDOW(window,)
+//     s_SwapBuffers(window->device_context);
+// }
 
 void PAL_MaximizeWindow(PAL_Window* window)
 {
