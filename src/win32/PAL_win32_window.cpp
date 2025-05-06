@@ -252,7 +252,7 @@ PAL_Window* PAL_CreateWindow(const char* title, u32 width, u32 height, u32 flags
     wchar_t* wstr = PAL_ToWstring(title);
 
     PAL_Window* window = (PAL_Window*)s_Data.allocator.alloc(sizeof(PAL_Window));
-    if (!window) { PAL_SetError("failed to create window"); return nullptr; }
+    PAL_CHECK(window, "failed to create window", nullptr)
 
     window->x = CW_USEDEFAULT;
     window->y = CW_USEDEFAULT;
@@ -276,11 +276,7 @@ PAL_Window* PAL_CreateWindow(const char* title, u32 width, u32 height, u32 flags
         NULL
     );
 
-    if (!window->handle) { 
-        PAL_SetError("failed to create windows window handle"); 
-        s_Data.allocator.free(window);
-        return nullptr;
-    }
+    PAL_CHECK(window->handle, "failed to create windows window handle", nullptr)
 
     i32 show_flag = SW_HIDE;
     if (flags & PAL_WINDOW_MAXIMIZE) { show_flag = SW_SHOWMAXIMIZED; }
@@ -296,23 +292,6 @@ PAL_Window* PAL_CreateWindow(const char* title, u32 width, u32 height, u32 flags
     s_Data.allocator.free(wstr);
 
     PAL_MapKeys(window);
-    if (flags & PAL_WINDOW_OPENGL) {
-        window->wgl_context = PAL_WGLCreateContext(
-            window->handle, 
-            s_Data.glversion_major, 
-            s_Data.glversion_minor
-        );
-        window->device_context = GetDC(window->handle);
-        s_wglMakeCurrent(window->device_context, window->wgl_context);
-        if (!window->wgl_context) {
-            PAL_SetError("failed to create wgl context");
-            ReleaseDC(window->handle, window->device_context);
-            DestroyWindow(window->handle);
-            s_Data.allocator.free(window);
-            return nullptr;
-        }
-    }
- 
     window->focused = true;
     window->shouldClose = false;
     return window;
@@ -322,10 +301,6 @@ void PAL_DestroyWindow(PAL_Window* window)
 {
     CHECK_WINDOW(window, )
     PAL_ResetWindowCallbacks(window);
-    if (window->wgl_context) {
-        s_wglDeleteContext(window->wgl_context);
-    }
-    ReleaseDC(window->handle, window->device_context);
     DestroyWindow(window->handle);
     s_Data.allocator.free(window);
 }
@@ -355,12 +330,6 @@ void PAL_ShowWindow(PAL_Window* window)
     }
     ShowWindow(window->handle, show_flag);
 }
-
-// void PAL_SwapBuffers(PAL_Window* window)
-// {
-//     CHECK_WINDOW(window,)
-//     s_SwapBuffers(window->device_context);
-// }
 
 void PAL_MaximizeWindow(PAL_Window* window)
 {

@@ -23,7 +23,6 @@ enum PAL_WindowFlags
     PAL_WINDOW_RESIZABLE = PAL_BIT(2),
     PAL_WINDOW_MINIMIZEBOX = PAL_BIT(3),
     PAL_WINDOW_MAXIMIZE = PAL_BIT(4),
-    PAL_WINDOW_OPENGL = PAL_BIT(5),
     PAL_APP_WINDOW = PAL_WINDOW_SHOWN | PAL_WINDOW_RESIZABLE | PAL_WINDOW_MINIMIZEBOX
 };
 
@@ -33,7 +32,6 @@ PAL_API void PAL_DestroyWindow(PAL_Window* window);
 PAL_API void PAL_PullEvents();
 PAL_API void PAL_HideWindow(PAL_Window* window);
 PAL_API void PAL_ShowWindow(PAL_Window* window);
-//PAL_API void PAL_SwapBuffers(PAL_Window* window);
 
 PAL_API void PAL_MaximizeWindow(PAL_Window* window);
 PAL_API void PAL_MinimizeWindow(PAL_Window* window);

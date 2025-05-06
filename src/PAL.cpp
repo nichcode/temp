@@ -18,13 +18,6 @@ i32 PAL_Init(PAL_InitData init_data)
 
     PAL_InitInput();
 
-    if (init_data.glversion_major == 0) {
-        s_Data.glversion_major = glVersion.major;
-    }
-    if (init_data.glversion_minor == 0) {
-        s_Data.glversion_minor = glVersion.minor;
-    }
-
     PAL_INFO("PAL Initialized");
     return 0;
 }

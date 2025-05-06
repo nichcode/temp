@@ -9,4 +9,6 @@ struct PAL_Dx11Device
     ID3D11DeviceContext* context;
     IDXGISwapChain* swapChain = nullptr;
     ID3D11RenderTargetView* view = nullptr;
+
+    f32 color[4]{};
 };

@@ -19,6 +19,7 @@ void PAL_SetError(const char* msg, ...)
 
 #if defined(PAL_CONFIG_DEBUG) || defined(PAL_ENABLE_ASSERT)
     PAL_WriteConsole(PAL_LOG_LEVEL_ERROR, s_Error.c_str());
+    PAL_BREAK;
 #endif // PAL_CONFIG_DEBUG || PAL_ENABLE_ASSERT
 }
 

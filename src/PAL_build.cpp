@@ -15,6 +15,7 @@
 
 // opengl
 #include "opengl/PAL_glfuncs.cpp"
+#include "opengl/PAL_gldevice.cpp"
 
 // dx11
 #include "dx11/PAL_dx11device.cpp"

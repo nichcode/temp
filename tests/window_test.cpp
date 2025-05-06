@@ -57,7 +57,7 @@ int main(int argc, char** argv)
     init_data.custom_allocator = false;
     PAL_Init(init_data);
 
-    u32 flags = PAL_APP_WINDOW | PAL_WINDOW_CENTER | PAL_WINDOW_OPENGL;
+    u32 flags = PAL_APP_WINDOW | PAL_WINDOW_CENTER;
     PAL_Window* window = PAL_CreateWindow("window", 640, 480, flags);
 
     PAL_SetWindowCloseCallback(window, onWindowClose);
@@ -72,8 +72,6 @@ int main(int argc, char** argv)
 
     while (!PAL_WindowShouldClose(window)) {
         PAL_PullEvents();
-
-        //PAL_SwapBuffers(window);
     }
     
     PAL_DestroyWindow(window);

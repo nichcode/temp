@@ -11,8 +11,6 @@
 struct PAL_InitData
 {
     b8 custom_allocator = false;
-    i32 glversion_major = 0;
-    i32 glversion_minor = 0;
     PAL_Allocator allocator;
 };
 

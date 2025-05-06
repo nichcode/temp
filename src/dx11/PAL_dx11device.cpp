@@ -6,7 +6,6 @@
 void* PAL_CreateDx11Device(PAL_DeviceDesc* desc)
 {
     if (s_Data.directx_flags & PAL_DIRECTX11) {
-        PAL_CHECK(desc->window, "window is null", nullptr)
         PFN_D3D11_CREATE_DEVICE_AND_SWAP_CHAIN D3D11CreateDevice_pfn = nullptr;
         
         D3D11CreateDevice_pfn = (PFN_D3D11_CREATE_DEVICE_AND_SWAP_CHAIN)PAL_GetProcAddress(
@@ -67,6 +66,7 @@ void* PAL_CreateDx11Device(PAL_DeviceDesc* desc)
         device->handle->CreateRenderTargetView(back_buffer, nullptr, &device->view);
         PAL_CHECK(device->view, "failed to create rendertarget", nullptr)
 
+        back_buffer->Release();
         return device;
     }
     else {
@@ -89,4 +89,19 @@ void PAL_Dx11SwapBuffers(void* dx11_device, b8 vsync)
 {
     PAL_Dx11Device* device = (PAL_Dx11Device*)dx11_device;
     device->swapChain->Present(vsync, 0);
+}
+
+void PAL_Dx11Clear(void* dx11_device)
+{
+    PAL_Dx11Device* device = (PAL_Dx11Device*)dx11_device;
+    device->context->ClearRenderTargetView(device->view, device->color);
+}
+
+void PAL_Dx11SetClearColor(void* dx11_device, PAL_Color* color)
+{
+    PAL_Dx11Device* device = (PAL_Dx11Device*)dx11_device;
+    device->color[0] = color->r;
+    device->color[1] = color->g;
+    device->color[2] = color->b;
+    device->color[3] = color->a;
 }

@@ -14,8 +14,6 @@ enum PAL_DirectXFlags
 struct PAL_Data
 {
     PAL_Allocator allocator;
-    i32 glversion_major = 0;
-    i32 glversion_minor = 0;
     u32 directx_flags = 0;
 
     void* dx11 = nullptr;
