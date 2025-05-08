@@ -1,7 +1,7 @@
 
 #include "PAL/PAL.h"
 
-#define USE_GL 0
+#define USE_GL 1
 
 const char* g_window_name = nullptr;
 u32 g_device_type = 0;
@@ -37,19 +37,17 @@ int main(int argc, char** argv)
 		 0.0f,  0.5f,
     };
 
-    PAL_BufferAttrib position_attrib;
-    position_attrib.type = PAL_DATATYPE_FLOAT2;
-    PAL_BufferAttribLayout layout;
-    layout.attribs[0] = position_attrib;
-    layout.count = 1;
-    PAL_ProcessBufferLayout(&layout);
+    u32 layouts[1] = {
+        PAL_DATATYPE_FLOAT2
+    };
+
+    PAL_BufferLayoutInfo layout_info = PAL_GetBufferLayoutInfo(layouts, 1);
 
     PAL_BufferDesc buffer_desc;
     buffer_desc.usage = PAL_DYNAMIC;
     buffer_desc.type = PAL_VERTEX_BUFFER;
     buffer_desc.size = sizeof(vertices);
     buffer_desc.data = vertices;
-    buffer_desc.layout = layout;
     PAL_Buffer* vertex_buffer = PAL_CreateBuffer(device, &buffer_desc);
 
     while (!PAL_WindowShouldClose(window)) {

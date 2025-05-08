@@ -32,25 +32,14 @@ enum PAL_BufferUsage
     PAL_DYNAMIC
 };
 
-struct PAL_BufferAttrib
+struct PAL_BufferLayoutInfo
 {
-    u32 divisor = 0;
-    b8 normalize = false;
-    u32 type = 0;
-};
-
-struct PAL_BufferAttribLayout
-{
-    PAL_BufferAttrib attribs[PAL_MAX_ATTRIB]{};
     u32 offsets[PAL_MAX_ATTRIB]{};
-    u32 count = 0;
-    u32 stride = 0;
+    u32 count, stride = 0;
 };
 
 struct PAL_BufferDesc
 {
-    PAL_BufferAttribLayout layout;
-    
     u32 type = 0;
     u32 usage = 0;
     u32 size = 0;
@@ -62,4 +51,4 @@ PAL_API PAL_Buffer* PAL_CreateBuffer(PAL_Device* device, PAL_BufferDesc* desc);
 PAL_API void PAL_DestroyBuffer(PAL_Buffer* buffer);
 PAL_API void PAL_SetBufferData(PAL_Buffer* buffer, u32 type, void* data, u32 size);
 
-PAL_API void PAL_ProcessBufferLayout(PAL_BufferAttribLayout* layout);
+PAL_API PAL_BufferLayoutInfo PAL_GetBufferLayoutInfo(u32* layout, u32 count);

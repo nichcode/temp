@@ -17,12 +17,12 @@ struct PAL_Buffer
     {
         void (*destroy)(void* handle) = nullptr;
         void (*setData)(void* handle, void* data, u32 size) = nullptr;
-        void (*bind)(void* handle, u32 slot, u32 stride, u32 offset) = nullptr;
+        void (*bind)(void* handle, u32 start_slot, u32 type, u32 divisor, u32 stride, u64 offset) = nullptr;
     };
 
     BufferAPI API;
     void* handle = nullptr;
-    u32 usage = 0, stride = 0;
+    u32 usage = 0, size = 0;
 };
 
 struct PAL_Device
@@ -62,7 +62,7 @@ void PAL_WriteConsole(PAL_LogLevel level, const char* msg);
 void PAL_InitInput();
 u32 PAL_CheckDirectX();
 
-void PAL_BindBuffer(PAL_Buffer* buffer, u32 slot, u32 stride, u32 offset);
+void PAL_BindBuffer(PAL_Buffer* buffer, u32 start_slot, u32 type, u32 divisor, u32 stride, u32 offset);
 
 #ifdef PAL_CONFIG_DEBUG
 #define PAL_CHECK(expr, msg, ret)  if (expr) {} else { PAL_SetError(msg); PAL_BREAK; return ret; }

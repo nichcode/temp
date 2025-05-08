@@ -1,18 +1,11 @@
 
 #include "PAL_pch.h"
 #include "PAL_gldevice.h"
-#include "PAL_glfuncs.h"
+#include "PAL_gl.h"
 
 #ifdef PAL_PLATFORM_WINDOWS
 #include "win32/PAL_wgl_context.h"
 #endif // PAL_PLATFORM_WINDOWS 
-
-struct PAL_GLDevice
-{
-    PAL_Window* window;
-    void* context;
-    void* deviceContext;
-};
 
 void* PAL_CreateGLDevice(PAL_DeviceDesc* desc)
 {
@@ -43,6 +36,8 @@ void* PAL_CreateGLDevice(PAL_DeviceDesc* desc)
         glViewport(0, 0, (GLsizei)desc->swap_chain_width, (GLsizei)desc->swap_chain_height);
     }
 
+    glGenVertexArrays(1, &device->vao);
+    glBindVertexArray(device->vao);
     return device;
 }
 

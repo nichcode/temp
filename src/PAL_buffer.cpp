@@ -5,6 +5,8 @@
 #include "dx11/PAL_dx11buffer.h"
 #endif // PAL_PLATFORM_WINDOWS
 
+#include "opengl/PAL_glbuffer.h"
+
 #define CHECK_BUFFER(buffer, ret) PAL_CHECK(buffer, "buffer is null", ret)
 
 inline u32 PAL_GetDataTypeSize(u32 type)
@@ -34,33 +36,6 @@ inline u32 PAL_GetDataTypeSize(u32 type)
     return 0;
 }
 
-inline u32 PAL_GetDataTypeCount(u32 type)
-{
-    switch (type) {
-        case PAL_DATATYPE_FLOAT:
-        case PAL_DATATYPE_INT: {
-            return 1;
-        }
-
-        case PAL_DATATYPE_FLOAT2:
-        case PAL_DATATYPE_INT2: {
-            return 2;
-        }
-
-        case PAL_DATATYPE_FLOAT3:
-        case PAL_DATATYPE_INT3: {
-            return 3;
-        }
-
-        case PAL_DATATYPE_FLOAT4:
-        case PAL_DATATYPE_INT4: {
-            return 4;
-        }
-    }
-
-    return 0;
-}
-
 PAL_Buffer* PAL_CreateBuffer(PAL_Device* device, PAL_BufferDesc* desc)
 {
     PAL_CHECK(device, "device is null", nullptr);
@@ -68,6 +43,7 @@ PAL_Buffer* PAL_CreateBuffer(PAL_Device* device, PAL_BufferDesc* desc)
 
     PAL_Buffer* buffer = (PAL_Buffer*)s_Data.allocator.alloc(sizeof(PAL_Buffer));
     PAL_CHECK(buffer, "Failed to create buffer", nullptr);
+    buffer->size = desc->size;
 
     switch (device->type) {
 #ifdef PAL_PLATFORM_WINDOWS
@@ -83,7 +59,12 @@ PAL_Buffer* PAL_CreateBuffer(PAL_Device* device, PAL_BufferDesc* desc)
 #endif // PAL_PLATFORM_WINDOWS
 
         case PAL_DEVICE_GL: {
-            
+            buffer->handle = PAL_CreateGLBuffer(device->handle, desc);
+            buffer->API.destroy = PAL_DestroyGLBuffer;
+            buffer->API.setData = PAL_SetGLBufferData;
+            buffer->API.bind = PAL_BindGLBuffer;
+
+            return buffer;
             break;
         }
     }
@@ -101,23 +82,27 @@ void PAL_DestroyBuffer(PAL_Buffer* buffer)
 void PAL_SetBufferData(PAL_Buffer* buffer, void* data, u32 size)
 {
     CHECK_BUFFER(buffer,)
+    PAL_CHECK(size <= buffer->size, "size is greater than buffer size",)
     if (buffer->usage) {
         buffer->API.setData(buffer->handle, data, size);
     }
     else { PAL_WARN("can not set data to a static vertex buffer"); }
 }
 
-void PAL_BindBuffer(PAL_Buffer* buffer, u32 slot, u32 stride, u32 offset)
+void PAL_BindBuffer(PAL_Buffer* buffer, u32 start_slot, u32 type, u32 divisor, u32 stride, u64 offset)
 {
     CHECK_BUFFER(buffer,)
-    buffer->API.bind(buffer->handle, slot, stride, offset);
+    buffer->API.bind(buffer->handle, start_slot, type, divisor, stride, offset);
 }
 
-void PAL_ProcessBufferLayout(PAL_BufferAttribLayout* layout)
+PAL_BufferLayoutInfo PAL_GetBufferLayoutInfo(u32* layout, u32 count)
 {
-    layout->stride = 0;
-    for (u32 i = 0; i < layout->count; i++) {
-        layout->offsets[i] = layout->stride;
-        layout->stride += PAL_GetDataTypeSize(layout->attribs[i].type);
+    PAL_BufferLayoutInfo info;
+    info.stride = 0;
+    for (u32 i = 0; i < count; i++) {
+        info.offsets[i] = info.stride;
+        info.stride += PAL_GetDataTypeSize(layout[i]);
     }
+
+    return info;
 }

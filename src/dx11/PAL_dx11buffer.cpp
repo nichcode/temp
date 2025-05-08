@@ -85,6 +85,7 @@ void PAL_DestroyDx11Buffer(void* dx11_buffer)
 {
     PAL_Dx11Buffer* buffer = (PAL_Dx11Buffer*)dx11_buffer;
     buffer->handle->Release();
+    s_Data.allocator.free(buffer);
 }
 
 void PAL_SetDx11BufferData(void* dx11_buffer, void* data, u32 size)
@@ -106,16 +107,17 @@ void PAL_SetDx11BufferData(void* dx11_buffer, void* data, u32 size)
     context->Unmap(buffer->handle, 0);
 }
 
-void PAL_BindDx11Buffer(void* dx11_buffer, u32 slot, u32 stride, u32 offset)
+void PAL_BindDx11Buffer(void* dx11_buffer, u32 start_slot, u32 type, u32 divisor, u32 stride, u64 offset)
 {
     PAL_Dx11Buffer* buffer = (PAL_Dx11Buffer*)dx11_buffer;
     ID3D11DeviceContext* context = buffer->device->context;
-    PAL_CHECK(slot < PAL_MAX_SLOTS, "slot is out of bounds", )
+    PAL_CHECK(start_slot < PAL_MAX_SLOTS, "start slot is out of bounds",)
 
+    u32 _offset = (u32)offset;
     if (buffer->type == PAL_VERTEX_BUFFER) {
-        context->IASetVertexBuffers(slot, 1, &buffer->handle, &stride, &offset);
+        context->IASetVertexBuffers(start_slot, 1, &buffer->handle, &stride, &_offset);
     }
     else if (buffer->type == PAL_INDEX_BUFFER) {
-        context->IASetIndexBuffer(buffer->handle, DXGI_FORMAT_R32_UINT, offset);
+        context->IASetIndexBuffer(buffer->handle, DXGI_FORMAT_R32_UINT, _offset);
     }
 }
