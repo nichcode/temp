@@ -7,6 +7,18 @@
 #include "win32/PAL_wgl_context.h"
 #endif // PAL_PLATFORM_WINDOWS 
 
+inline GLenum PAL_GetGLPrimitive(u32 primitive)
+{
+    switch (primitive) {
+        case PAL_TRIANGLES: {
+            return GL_TRIANGLES;
+            break;
+        }
+    }
+
+    return 0;
+}
+
 void* PAL_CreateGLDevice(PAL_DeviceDesc* desc)
 {
     PAL_GLDevice* device = (PAL_GLDevice*)s_Data.allocator.alloc(sizeof(PAL_GLDevice));
@@ -68,6 +80,27 @@ void PAL_GLSwapBuffers(void* gl_device, b8 vsync)
 void PAL_GLClear(void* gl_device)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    PAL_GLDevice* device = (PAL_GLDevice*)gl_device;
+}
+
+void PAL_GLFlush(void* gl_device, u32 primitive, u32 mode, u32 count, u32 instance_count)
+{
+    u32 gl_mode = PAL_GetGLPrimitive(primitive);
+    if (mode == PAL_ARRAYS) {
+        glDrawArrays(gl_mode, 0, count);
+    }
+
+    else if (mode == PAL_ELEMENTS) {
+        glDrawElements(gl_mode, count, GL_UNSIGNED_INT, nullptr);
+    }
+
+    else if (mode == PAL_ARRAYS_INSTANCED) {
+        glDrawArraysInstanced(gl_mode, 0, count, instance_count);
+    }
+
+    else if (mode == PAL_ELEMENTS_INSTANCED) {
+        glDrawElementsInstanced(gl_mode, count, GL_UNSIGNED_INT, nullptr, instance_count);
+    }
 }
 
 void PAL_GLSetClearColor(void* gl_device, PAL_Color* color)

@@ -30,6 +30,27 @@ inline u32 PAL_GetGLDataTypeCount(u32 type)
     return 0;
 }
 
+inline GLenum PAL_GetGLDataType(u32 type)
+{
+    switch (type) {
+        case PAL_DATATYPE_FLOAT:
+        case PAL_DATATYPE_FLOAT2:
+        case PAL_DATATYPE_FLOAT3:
+        case PAL_DATATYPE_FLOAT4: {
+            return GL_FLOAT;
+        }
+
+        case PAL_DATATYPE_INT:
+        case PAL_DATATYPE_INT2:
+        case PAL_DATATYPE_INT3:
+        case PAL_DATATYPE_INT4: {
+            return GL_INT;
+        }
+    }
+
+    return 0;
+}
+
 void PAL_SetBufferLayout(u32 start_slot, u32 type, u32 divisor, u32 stride, u64 offset)
 {
     switch (type) {
@@ -38,7 +59,8 @@ void PAL_SetBufferLayout(u32 start_slot, u32 type, u32 divisor, u32 stride, u64 
         case PAL_DATATYPE_FLOAT3: 
         case PAL_DATATYPE_FLOAT4: {
             u32 count = PAL_GetGLDataTypeCount(type);
-            glVertexAttribPointer(start_slot, count, type, false, stride, (const void*)offset);
+            GLenum gl_type = PAL_GetGLDataType(type);
+            glVertexAttribPointer(start_slot, count, gl_type, false, stride, (const void*)offset);
             glEnableVertexAttribArray(start_slot);
             glVertexAttribDivisor(start_slot, divisor);
             break;
@@ -49,7 +71,8 @@ void PAL_SetBufferLayout(u32 start_slot, u32 type, u32 divisor, u32 stride, u64 
         case PAL_DATATYPE_INT3: 
         case PAL_DATATYPE_INT4: {
             u32 count = PAL_GetGLDataTypeCount(type);
-            glVertexAttribIPointer(start_slot, count, type, stride, (const void*)offset);
+            GLenum gl_type = PAL_GetGLDataType(type);
+            glVertexAttribIPointer(start_slot, count, gl_type, stride, (const void*)offset);
             glEnableVertexAttribArray(start_slot);
             glVertexAttribDivisor(start_slot, divisor);
             break;
@@ -144,7 +167,9 @@ void PAL_BindGLBuffer(void* gl_buffer, u32 start_slot, u32 type, u32 divisor, u3
             }
         }
 
-        PAL_SetBufferLayout(start_slot, type, divisor, stride, offset);
+        if (buffer->type == GL_ARRAY_BUFFER) {
+            PAL_SetBufferLayout(start_slot, type, divisor, stride, offset);
+        }
         buffer->data_sent = true;
     }
 

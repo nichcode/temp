@@ -97,6 +97,13 @@ void PAL_Dx11Clear(void* dx11_device)
     device->context->ClearRenderTargetView(device->view, device->color);
 }
 
+void PAL_Dx11Flush(void* dx11_device, u32 primitive, u32 mode, u32 count, u32 instance_count)
+{
+    PAL_Dx11Device* device = (PAL_Dx11Device*)dx11_device;
+    //device->context->draw
+
+}
+
 void PAL_Dx11SetClearColor(void* dx11_device, PAL_Color* color)
 {
     PAL_Dx11Device* device = (PAL_Dx11Device*)dx11_device;

@@ -44,6 +44,7 @@ PAL_Buffer* PAL_CreateBuffer(PAL_Device* device, PAL_BufferDesc* desc)
     PAL_Buffer* buffer = (PAL_Buffer*)s_Data.allocator.alloc(sizeof(PAL_Buffer));
     PAL_CHECK(buffer, "Failed to create buffer", nullptr);
     buffer->size = desc->size;
+    buffer->usage = desc->usage;
 
     switch (device->type) {
 #ifdef PAL_PLATFORM_WINDOWS
@@ -99,6 +100,7 @@ PAL_BufferLayoutInfo PAL_GetBufferLayoutInfo(u32* layout, u32 count)
 {
     PAL_BufferLayoutInfo info;
     info.stride = 0;
+    info.count = count;
     for (u32 i = 0; i < count; i++) {
         info.offsets[i] = info.stride;
         info.stride += PAL_GetDataTypeSize(layout[i]);
