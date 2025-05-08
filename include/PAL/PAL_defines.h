@@ -58,6 +58,9 @@ using b8 = bool;
 #define PAL_FILE __FILE__
 #define PAL_BIT(x) 1 << x
 
+#define PAL_MAX_SLOTS 16
+#define PAL_MAX_ATTRIB 8
+
 #ifdef PAL_PLATFORM_WINDOWS
 #define PAL_EXT __declspec(dllexport)
 #define PAL_IMT __declspec(dllimport)
@@ -87,8 +90,6 @@ using b8 = bool;
 #else
 #define STATIC_ASSERT static_assert
 #endif
-
-#define PAL_GL 0
 
 STATIC_ASSERT(sizeof(u8) == 1, "Expected u8 to be 1 byte.");
 STATIC_ASSERT(sizeof(u16) == 2, "Expected u16 to be 2 bytes.");

@@ -11,6 +11,35 @@ enum PAL_DirectXFlags
     PAL_DIRECTX10 = PAL_BIT(2)
 };
 
+struct PAL_Buffer
+{
+    struct BufferAPI
+    {
+        void (*destroy)(void* handle) = nullptr;
+        void (*setData)(void* handle, void* data, u32 size) = nullptr;
+        void (*bind)(void* handle, u32 slot, u32 stride, u32 offset) = nullptr;
+    };
+
+    BufferAPI API;
+    void* handle = nullptr;
+    u32 usage = 0, stride = 0;
+};
+
+struct PAL_Device
+{
+    struct DeivceAPI
+    {
+        void (*destroy)(void* handle) = nullptr;
+        void (*swapBuffers)(void* handle, b8 vsync) = nullptr;
+        void (*clear)(void* handle) = nullptr;
+        void (*setClearColor)(void* handle, PAL_Color* color) = nullptr;
+    };
+
+    DeivceAPI API;
+    void* handle = nullptr;
+    u32 type = 0;
+};
+
 struct PAL_Data
 {
     PAL_Allocator allocator;
@@ -32,6 +61,8 @@ void PAL_WriteConsole(PAL_LogLevel level, const char* msg);
 
 void PAL_InitInput();
 u32 PAL_CheckDirectX();
+
+void PAL_BindBuffer(PAL_Buffer* buffer, u32 slot, u32 stride, u32 offset);
 
 #ifdef PAL_CONFIG_DEBUG
 #define PAL_CHECK(expr, msg, ret)  if (expr) {} else { PAL_SetError(msg); PAL_BREAK; return ret; }

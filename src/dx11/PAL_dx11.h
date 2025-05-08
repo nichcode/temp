@@ -12,3 +12,10 @@ struct PAL_Dx11Device
 
     f32 color[4]{};
 };
+
+struct PAL_Dx11Buffer
+{
+    ID3D11Buffer* handle;
+    PAL_Dx11Device* device;
+    u32 type;
+};

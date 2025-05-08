@@ -10,23 +10,9 @@
 
 #define CHECK_DEVICE(device, ret) PAL_CHECK(device, "device is null", ret)
 
-struct PAL_Device
-{
-    struct DeivceAPI
-    {
-        void (*destroy)(void* handle) = nullptr;
-        void (*swapBuffers)(void* handle, b8 vsync) = nullptr;
-        void (*clear)(void* handle) = nullptr;
-        void (*setClearColor)(void* handle, PAL_Color* color) = nullptr;
-    };
-
-    DeivceAPI API;
-    void* handle = nullptr;
-    u32 type = 0;
-};
-
 PAL_Device* PAL_CreateDevice(PAL_DeviceDesc* desc)
 {
+    PAL_CHECK(desc, "device descriptor is null", nullptr);
     PAL_CHECK(desc->window, "window is null", nullptr);
 
     PAL_Device* device = (PAL_Device*)s_Data.allocator.alloc(sizeof(PAL_Device));
@@ -58,7 +44,7 @@ PAL_Device* PAL_CreateDevice(PAL_DeviceDesc* desc)
             break;
         }
     }
-    PAL_SetError("invalid device type");
+    PAL_CHECK(false, "Failed to create device. Invalid device type", nullptr);
     return nullptr;
 }
 

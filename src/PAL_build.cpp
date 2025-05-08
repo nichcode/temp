@@ -5,6 +5,7 @@
 #include "PAL_error.cpp"
 #include "PAL_input.cpp"
 #include "PAL_device.cpp"
+#include "PAL_buffer.cpp"
 #include "PAL.cpp"
 
 #ifdef PAL_PLATFORM_WINDOWS
@@ -19,3 +20,4 @@
 
 // dx11
 #include "dx11/PAL_dx11device.cpp"
+#include "dx11/PAL_dx11buffer.cpp"
